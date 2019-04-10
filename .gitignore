@@ -1,0 +1,6 @@
+.DS_Store
+.vscode
+*~
+*.py[cod]
+.pytest_cache/
+__pycache__/
