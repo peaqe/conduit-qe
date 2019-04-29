@@ -36,5 +36,5 @@ After starting the virtual environment, the `rhsm-conduit` API tests
 can be easily run by calling as it follows:
 
 ```
-py.test -v conduitqe/tests/api/v1/
+py.test -v conduitqe/tests/api/
 ```

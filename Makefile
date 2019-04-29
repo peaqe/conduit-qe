@@ -31,7 +31,7 @@ test:
 	pipenv run py.test tests
 
 test-api:
-	pipenv run py.test $(PYTEST_OPTIONS) conduitqe/tests/api/v1
+	pipenv run py.test $(PYTEST_OPTIONS) conduitqe/tests/api/
 
 
 test-coverage:
