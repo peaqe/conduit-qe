@@ -39,6 +39,16 @@ pipeline {
                 }
             }
         }
+        stage('Run') {
+            steps {
+                dir('conduit') {
+                    // Build and run conduit in backgrount (to prevent job from
+                    // hanging)
+                    sh './gradlew assemble'
+                    sh 'java -jar build/libs/rhsm-conduit-*.jar &'
+                }
+            }
+        }
         stage('Setup QE Tests') {
             steps {
                 echo 'test'
@@ -46,7 +56,7 @@ pipeline {
                     git 'https://github.com/peaqe/conduit-qe'
                     sh 'sudo dnf install -y pipenv'
                     sh 'pipenv install'
-                    // sh 'pipenv run py.test -v conduitqe/tests/api/'
+                    sh 'pipenv run py.test -v conduitqe/tests/api/'
                 }
             }
         }
