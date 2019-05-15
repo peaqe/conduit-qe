@@ -3,11 +3,11 @@
 import logging
 
 import requests
+from conduitqe.config import get_conduit_api_actuator
 
 logger = logging.getLogger(__name__)
 
-CONDUIT_BASE_URL = 'http://localhost:8080'
-CONDUIT_API_ACTUATOR = f'{CONDUIT_BASE_URL}/actuator'
+CONDUIT_API_ACTUATOR = get_conduit_api_actuator()
 
 
 def conduit_info():
