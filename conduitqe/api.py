@@ -15,19 +15,22 @@ CONDUIT_API_ACTUATOR = get_conduit_api_actuator()
 CONDUIT_API_INVENTORY = get_conduit_api_inventory()
 
 
+def request(method, url, **kwargs):
+    logger.debug(f'method={method}, url={url}')
+    resp = requests.request(method, url, **kwargs)
+    logger.debug(f'response={resp.status_code}, text={resp.text}')
+    return resp
+
+
 def conduit_info():
     url = f'{CONDUIT_API_ACTUATOR}/info'
-    logger.info(url)
-    resp = requests.get(url)
-    logger.info(resp)
+    resp = request('get', url)
     return resp.status_code, resp.json()
 
 
 def conduit_health():
     url = f'{CONDUIT_API_ACTUATOR}/health'
-    logger.info(url)
-    resp = requests.get(url)
-    logger.info(resp)
+    resp = request('get', url)
     return resp.status_code, resp.json()
 
 
@@ -35,7 +38,5 @@ def conduit_host_inventory(account_number):
     auth = create_authentication(account_number)
     headers = {'x-rh-identity': auth}
     url = f'{CONDUIT_API_INVENTORY}/hosts'
-    logger.info(url)
-    resp = requests.get(url, headers=headers)
-    logger.info(resp)
+    resp = request('get', url, headers=headers)
     return resp.status_code, resp.json()
