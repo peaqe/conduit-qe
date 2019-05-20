@@ -31,8 +31,8 @@ def conduit_health():
     return resp.status_code, resp.json()
 
 
-def conduit_host_inventory(org_key):
-    auth = create_authentication(org_key)
+def conduit_host_inventory(account_number):
+    auth = create_authentication(account_number)
     headers = {'x-rh-identity': auth}
     url = f'{CONDUIT_API_INVENTORY}/hosts'
     logger.info(url)
