@@ -21,6 +21,7 @@ Available values for COMMANDS include:
   facts, update-facts trigger facts update
   hosts, inventories  show systems inventories in JSON format
   logs, watch-logs    follow rhsm-conduit logs
+  pod, conduit-pod    guess running rhsm-conduit pod name
 
 EOF
 	exit 1
@@ -97,6 +98,11 @@ EOF
 		read_config
 		oc project ${PROJECT}
 		oc logs -f ${POD}
+		;;
+        pod|conduit-pod)
+		read_config
+		oc project ${PROJECT}
+		oc get pods | sed -n '/^rhsm-conduit-[0-9]/p' | grep Running  | awk '{ print $1 }'
 		;;
 	*)
 		echo "Unknown option or command: $1"
