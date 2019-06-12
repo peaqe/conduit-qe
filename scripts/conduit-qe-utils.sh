@@ -17,6 +17,7 @@ Available values for OPTIONS include:
 
 Available values for COMMANDS include:
 
+  auth, identity      show authentication token from account number
   register            register system
   facts, update-facts trigger facts update
   hosts, inventories  show systems inventories in JSON format
@@ -59,6 +60,10 @@ while test $# -gt 0; do
 		;;
 	-h|--help|help)
 		usage
+		;;
+	auth|identity)
+		read_config
+		printf '{"identity": {"account_number": "%s"}}' ${ACCOUNT_NUMBER} | base64
 		;;
 	register)
 		read_config
