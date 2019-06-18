@@ -7,17 +7,19 @@ from conduitqe import api
 logger = logging.getLogger(__name__)
 
 
-def test_conduit_version():
-    status, resp = api.conduit_info()
-    assert status == 200, f'Conduit response with error: {status}'
-    version = resp['build']['version']
-    logger.info(f'Conduit version reported is {version}')
+def test_conduit_name_and_version():
+    ok, data = api.conduit_info()
+    assert ok, f'Conduit response with error: {data}'
+    name = data['build']['name']
+    assert name == 'rhsm-conduit', \
+        f'Invalid name to test: {name}'
+    version = data['build']['version']
     major, minor, patch_level = version.split('.')
     assert (major, minor) == ('1', '0'), \
         f'Invalid version to test: {major}.{minor}'
 
 
 def test_conduit_health():
-    status, resp = api.conduit_health()
-    assert status == 200, f'Conduit response with error: {status}'
-    assert resp['status'] == 'UP', f'Bad status health: {resp["status"]}'
+    ok, data = api.conduit_health()
+    assert ok, f'Conduit response with error: {data}'
+    assert data['status'] == 'UP', f'Bad status health: {data["status"]}'

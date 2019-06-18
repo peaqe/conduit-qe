@@ -1,8 +1,8 @@
 """API client for working with rhsm-conduit."""
 
 import logging
-
 import requests
+
 from conduitqe.config import (
         get_conduit_api_actuator,
         get_conduit_api_inventory
@@ -16,27 +16,36 @@ CONDUIT_API_INVENTORY = get_conduit_api_inventory()
 
 
 def request(method, url, **kwargs):
-    logger.debug(f'method={method}, url={url}')
-    resp = requests.request(method, url, **kwargs)
-    logger.debug(f'response={resp.status_code}, text={resp.text}')
-    return resp
+    response = requests.request(method, url, **kwargs)
+    return response
+
+
+def parse(response):
+    if 200 <= response.status_code < 400:
+        return True, response.json()
+    return False, response.text
+
+
+def conduit(endpoint):
+    try:
+        url = f'{CONDUIT_API_ACTUATOR}{endpoint}'
+        response = request('get', url)
+    except requests.exceptions.ConnectionError as err:
+        return False, err
+    return parse(response)
 
 
 def conduit_info():
-    url = f'{CONDUIT_API_ACTUATOR}/info'
-    resp = request('get', url)
-    return resp.status_code, resp.json()
+    return conduit('/info')
 
 
 def conduit_health():
-    url = f'{CONDUIT_API_ACTUATOR}/health'
-    resp = request('get', url)
-    return resp.status_code, resp.json()
+    return conduit('/health')
 
 
 def conduit_host_inventory(account_number):
     auth = create_authentication(account_number)
     headers = {'x-rh-identity': auth}
     url = f'{CONDUIT_API_INVENTORY}/hosts'
-    resp = request('get', url, headers=headers)
-    return resp.status_code, resp.json()
+    response = request('get', url, headers=headers)
+    return parse(response)

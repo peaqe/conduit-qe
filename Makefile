@@ -37,16 +37,11 @@ test-api:
 test-coverage:
 	pipenv run py.test --verbose --cov-report term --cov=conduitqe --cov=tests tests
 
-docs:
-	scripts/gendocs.sh
-
 clean:
-	rm -f *.log
-	rm -f *.xml
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
 uninstall:
 	pipenv --rm || true
 
-.PHONY: all install install-dev lint test test-coverage test-api docs clean uninstall
+.PHONY: all install install-dev lint test test-coverage test-api clean uninstall
