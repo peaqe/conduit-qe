@@ -1,4 +1,4 @@
-PYTEST_OPTIONS = -vvv
+PYTEST_OPTIONS = -v
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of:"
@@ -28,14 +28,14 @@ lint:
 	pipenv run flake8 conduitqe tests
 
 test:
-	pipenv run py.test tests
+	pipenv run pytest tests
 
 test-api:
-	pipenv run py.test $(PYTEST_OPTIONS) conduitqe/tests/api/
+	pipenv run pytest $(PYTEST_OPTIONS) conduitqe/tests/api/
 
 
 test-coverage:
-	pipenv run py.test --verbose --cov-report term --cov=conduitqe --cov=tests tests
+	pipenv run pytest --verbose --cov-report term --cov=conduitqe --cov=tests tests
 
 clean:
 	find . -type f -name "*.py[co]" -delete
