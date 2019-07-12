@@ -6,7 +6,7 @@ verify_ssl = true
 [packages]
 pytest = "*"
 requests = "*"
-pexpect = "*"
+oc = "*"
 conduitqe = {editable = true,path = "."}
 
 [dev-packages]

@@ -38,6 +38,7 @@ test-coverage:
 	pipenv run pytest --verbose --cov-report term --cov=conduitqe --cov=tests tests
 
 clean:
+	rm -rf conduitqe.egg-info/
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 

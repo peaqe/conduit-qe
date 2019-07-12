@@ -12,7 +12,7 @@ with open(os.path.join(_project_root, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='conduitqe',
-    author='PEAQe Team',
+    author='The PEAQe Authors',
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -41,6 +41,7 @@ setup(
     install_requires=[
         'pytest',
         'requests',
+        'oc',
     ],
     license='GPLv3',
     long_description=long_description,
