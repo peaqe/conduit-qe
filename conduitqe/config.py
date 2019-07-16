@@ -1,9 +1,19 @@
 """Configuration for working with rhsm-conduit."""
 
 import os
+from types import SimpleNamespace
 
+CONFIG_NAMESPACE = None
 CONDUIT_BASE_URL = 'http://localhost:8080'
 INVENTORY_BASE_URL = 'http://insights-inventory.platform-qa.svc:8080'
+
+
+def get_config():
+    """Get configuration."""
+    global CONFIG_NAMESPACE
+    if CONFIG_NAMESPACE is None:
+        CONFIG_NAMESPACE = SimpleNamespace()
+    return CONFIG_NAMESPACE
 
 
 def get_conduit_base_url():
