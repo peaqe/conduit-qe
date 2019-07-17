@@ -1,19 +1,48 @@
 """Configuration for working with rhsm-conduit."""
 
 import os
+import configparser
+import logging
 from types import SimpleNamespace
 
-CONFIG_NAMESPACE = None
+CONFIG_PATHS = ['conduitqe.conf', '~/.conduitqe.conf']
 CONDUIT_BASE_URL = 'http://localhost:8080'
 INVENTORY_BASE_URL = 'http://insights-inventory.platform-qa.svc:8080'
+ConfigNamespace = None
+logger = logging.getLogger(__name__)
+
+
+def read_conf_file_with_environ(filename):
+    """Read config file and mix with environment variables."""
+    conf = configparser.ConfigParser(os.environ)
+    with open(filename) as f:
+        conf.read_string('[DEFAULT]\n' + f.read())
+    return conf
+
+
+def consolidate_configs():
+    """Find a configuration file and consolidate with environ vars."""
+    conf = None
+    for filename in CONFIG_PATHS:
+        filename = os.path.expanduser(filename)
+        if os.path.isfile(filename):
+            logger.debug("Reading configuration on '%s'", filename)
+            conf = read_conf_file_with_environ(filename)
+            break
+    if conf is None:
+        logger.debug('Configuration relying only on environment variables')
+        conf = configparser.ConfigParser(os.environ)
+    pass
+    return conf['DEFAULT']
 
 
 def get_config():
     """Get configuration."""
-    global CONFIG_NAMESPACE
-    if CONFIG_NAMESPACE is None:
-        CONFIG_NAMESPACE = SimpleNamespace()
-    return CONFIG_NAMESPACE
+    global ConfigNamespace
+    if ConfigNamespace is None:
+        kwargs = consolidate_configs()
+        ConfigNamespace = SimpleNamespace(**kwargs)
+    return ConfigNamespace
 
 
 def get_conduit_base_url():
