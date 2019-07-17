@@ -71,11 +71,11 @@
         },
         "oc": {
             "hashes": [
-                "sha256:210e6e3e2b9b15e20a287e10c58e179bc0e3ec55cbaed822f4dd726c4b700233",
-                "sha256:d849ef5cd32706c95d8c7566c8ba87007a81e61ac31421bece59c2d13a8c848a"
+                "sha256:b7d074e27e70b9dbf65f63c64d14e05cbe8ead47b4171d14862750bf79c557c6",
+                "sha256:de066dfe4d04bab62fc48a0dbecc20246154f306ed1ec2dbddd8e06c99240f6a"
             ],
             "index": "pypi",
-            "version": "==0.1.1"
+            "version": "==0.1.2"
         },
         "packaging": {
             "hashes": [

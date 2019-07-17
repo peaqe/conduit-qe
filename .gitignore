@@ -1,6 +1,8 @@
 .DS_Store
-.vscode
+.ipynb_checkpoints/
+.vscode/
 *~
+*.ipynb
 *.py[cod]
 *.egg-info/
 .pytest_cache/

@@ -28,14 +28,15 @@ lint:
 	pipenv run flake8 conduitqe tests
 
 test:
-	pipenv run pytest tests
+	pipenv run pytest $(PYTEST_OPTIONS) tests
 
 test-api:
 	pipenv run pytest $(PYTEST_OPTIONS) conduitqe/tests/api/
 
 
 test-coverage:
-	pipenv run pytest --verbose --cov-report term --cov=conduitqe --cov=tests tests
+	pipenv run pytest $(PYTEST_OPTIONS) --verbose \
+		--cov-report term --cov=conduitqe --cov=tests tests
 
 clean:
 	rm -rf conduitqe.egg-info/
