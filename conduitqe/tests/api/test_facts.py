@@ -55,7 +55,6 @@ def test_conduit_is_running(openshift_setup, rhsm_conduit_instance):
 def lookup_in_logs(logs, text, org_key):
     """Look up text in logs for matching org_key.
     """
-    match = False
     for log in logs:
         data = json.loads(log)
         message = data.get('message', '')
@@ -63,9 +62,8 @@ def lookup_in_logs(logs, text, org_key):
                      message, text, org_key)
         if message and message.startswith(text):
             if org_key in data['message']:
-                match = True
-                break
-    return match
+                return True
+    return False
 
 
 @pytest.mark.openshift
