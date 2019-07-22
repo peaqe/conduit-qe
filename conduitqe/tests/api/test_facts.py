@@ -22,22 +22,20 @@ logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module")
-def rhsm_conduit_instance():
-    cfg = get_config()
-    return cfg.pod
-
-
-@pytest.fixture(scope="module")
 def config():
     cfg = get_config()
     return cfg
 
 
 @pytest.fixture(scope="module")
-def openshift_setup():
-    cfg = get_config()
-    oc.login(cfg.openshift_url, cfg.openshift_token)
-    result = oc.set_project(cfg.project)
+def rhsm_conduit_instance(config):
+    return config.conduit_pod
+
+
+@pytest.fixture(scope="module")
+def openshift_setup(config):
+    oc.login(config.openshift_url, config.openshift_token)
+    result = oc.set_project(config.project)
     return result
 
 
