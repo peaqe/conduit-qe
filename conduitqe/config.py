@@ -7,7 +7,10 @@ from types import SimpleNamespace
 
 CONFIG_PATHS = ['conduitqe.conf', '~/.conduitqe.conf']
 CONDUIT_BASE_URL = 'http://localhost:8080'
-INVENTORY_BASE_URL = 'http://insights-inventory.platform-qa.svc:8080'
+INVENTORY_CI_BASE_URL = 'http://insights-inventory.platform-ci.svc:8080'
+INVENTORY_QA_BASE_URL = 'http://insights-inventory.platform-qa.svc:8080'
+INVENTORY_BASE_URL = INVENTORY_QA_BASE_URL
+
 ConfigNamespace = None
 logger = logging.getLogger(__name__)
 
@@ -32,7 +35,6 @@ def consolidate_configs():
     if conf is None:
         logger.debug('Configuration relying only on environment variables')
         conf = configparser.ConfigParser(os.environ)
-    pass
     return conf['DEFAULT']
 
 
@@ -42,6 +44,8 @@ def get_config():
     if ConfigNamespace is None:
         kwargs = consolidate_configs()
         ConfigNamespace = SimpleNamespace(**kwargs)
+        ConfigNamespace.conduit_base_url = get_conduit_base_url()
+        ConfigNamespace.inventory_base_url = get_inventory_base_url()
     return ConfigNamespace
 
 
