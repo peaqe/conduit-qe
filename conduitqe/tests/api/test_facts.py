@@ -16,6 +16,7 @@ import pytest
 import oc
 
 from conduitqe.config import get_config
+from conduitqe.utils import create_authentication
 
 
 logger = logging.getLogger(__name__)
@@ -91,3 +92,30 @@ def test_trigger_inventory_update(config, rhsm_conduit_instance):
     updated = lookup_in_logs(logs, 'Host inventory update completed', org_key)
     assert updated, \
         f'Host inventory update not completed for org key {org_key}'
+
+
+@pytest.mark.openshift
+def test_check_basic_facts(config, rhsm_conduit_instance):
+    """Test checking basic hosts facts (sanity test).
+    :id: 4b7744b8-ad7a-11e9-aed1-acde48001122
+    :description: Test when checking basic host facts if
+        the most basic facts elements are present.
+    :expectedresults: we get a valid JSON (possible with pagination),
+        where we have basic facts for the hosts that belongs to an account.
+    """
+    auth = create_authentication(config.account_number)
+    endpoint = '/api/inventory/v1/hosts'
+    url = f'{config.inventory_base_url}{endpoint}'
+    header = f'x-rh-identity: {auth}'
+    cmd = f'curl -s -H "{header}" {url}'
+    output = oc.exec(rhsm_conduit_instance, cmd)
+    assert '!DOCTYPE' not in output[0], '\n'.join(output)
+    output = ''.join(output)
+    data = json.loads(output)
+    assert data.get('results', ''), output
+    # FIXME: pagination, 'total': 8, 'count': 8, 'page': 1, 'per_page': 50
+    for result in data['results']:
+        assert result.get('facts'), result
+        for fact in result['facts']:
+            assert fact['namespace'] == 'rhsm'
+            assert fact['facts']['orgId'] == config.org_id
