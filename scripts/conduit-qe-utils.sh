@@ -36,6 +36,7 @@ read_config()
 		echo "Configuration file not found: ${CONDUITQE_CONF}"
 		exit 1
 	fi
+	AUTHENTICATION=$(printf '{"identity": {"account_number": "%s"}}' ${ACCOUNT_NUMBER} | base64)
 }
 
 check_custom_facts()
@@ -63,7 +64,7 @@ while test $# -gt 0; do
 		;;
 	auth|identity)
 		read_config
-		printf '{"identity": {"account_number": "%s"}}' ${ACCOUNT_NUMBER} | base64
+                echo "$AUTHENTICATION"
 		;;
 	register)
 		read_config
@@ -78,7 +79,7 @@ while test $# -gt 0; do
 			--username ${ETHEL_USERNAME} \
 			--password ${ETHEL_PASSWORD}
 		oc project ${PROJECT}
-		oc rsh ${POD} <<EOF 
+		oc rsh ${CONDUIT_POD} <<EOF
 curl -X POST http://localhost:8080/r/insights/platform/rhsm-conduit/v1/inventories/${ORG_ID}
 EOF
 		;;
@@ -87,22 +88,22 @@ EOF
 		check_custom_facts
 		sudo subscription-manager facts --update
 		oc project ${PROJECT}
-		oc rsh ${POD} <<EOF 
+		oc rsh ${CONDUIT_POD} <<EOF
 curl -X POST http://localhost:8080/r/insights/platform/rhsm-conduit/v1/inventories/${ORG_ID}
 EOF
 		;;
 	hosts|inventories)
 		read_config
 		oc project ${PROJECT} > /dev/null
-		oc rsh ${POD} <<EOF
+		oc rsh ${CONDUIT_POD} <<EOF
 curl -H "x-rh-identity: ${AUTHENTICATION}" \
-	http://dev-insights-inventory.rhsm-ci.svc:8080/r/insights/platform/inventory/api/v1/hosts | python -m json.tool
+	http://insights-inventory.platform-ci.svc:8080/api/inventory/v1/hosts | python -m json.tool
 EOF
 		;;
 	logs|watch-logs)
 		read_config
 		oc project ${PROJECT}
-		oc logs -f ${POD}
+		oc logs -f ${CONDUIT_POD}
 		;;
         pod|conduit-pod)
 		read_config

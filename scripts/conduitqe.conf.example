@@ -1,6 +1,5 @@
 PROJECT=rhsm-ci
-POD=rhsm-conduit
-AUTHENTICATION=abcxyz==
+CONDUIT_POD=rhsm-conduit-474-lh49x
 ETHEL_USERNAME=username
 ETHEL_PASSWORD=example
 ACCOUNT_NUMBER=6262626
