@@ -57,7 +57,7 @@ pipeline {
                     git 'https://github.com/peaqe/conduit-qe'
                     sh 'sudo dnf install -y pipenv'
                     sh 'pipenv install'
-                    sh 'pipenv run py.test -v conduitqe/tests/api/'
+                    sh 'pipenv run pytest -v -m "not openshift" conduitqe/tests/api/'
                 }
             }
         }
