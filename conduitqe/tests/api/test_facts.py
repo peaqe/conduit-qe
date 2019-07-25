@@ -77,8 +77,8 @@ def test_trigger_inventory_update(config, rhsm_conduit_instance):
         the org key is presented and the system was successfully updated.
     """
     org_key = config.org_id
-    endpoint = f'/r/insights/platform/rhsm-conduit/v1/inventories/{org_key}'
-    url = f'{config.conduit_base_url}{endpoint}'
+    endpoint_trigger_update = f'{config.endpoint_trigger_update}/{org_key}'
+    url = f'{config.conduit_base_url}{endpoint_trigger_update}'
     cmd = f'curl -s -I -X POST {url}'
     output = oc.exec(rhsm_conduit_instance, cmd)
     assert output[0].startswith('HTTP/1.1 204'), '\n'.join(output)
@@ -104,8 +104,7 @@ def test_check_basic_facts(config, rhsm_conduit_instance):
         where we have basic facts for the hosts that belongs to an account.
     """
     auth = create_authentication(config.account_number)
-    endpoint = '/api/inventory/v1/hosts'
-    url = f'{config.inventory_base_url}{endpoint}'
+    url = f'{config.inventory_base_url}{config.endpoint_get_facts}'
     header = f'x-rh-identity: {auth}'
     cmd = f'curl -s -H "{header}" {url}'
     output = oc.exec(rhsm_conduit_instance, cmd)

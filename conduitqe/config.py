@@ -10,6 +10,8 @@ CONDUIT_BASE_URL = 'http://localhost:8080'
 INVENTORY_CI_BASE_URL = 'http://insights-inventory.platform-ci.svc:8080'
 INVENTORY_QA_BASE_URL = 'http://insights-inventory.platform-qa.svc:8080'
 INVENTORY_BASE_URL = INVENTORY_QA_BASE_URL
+ENDPOINT_GET_FACTS = '/api/inventory/v1/hosts'
+ENDPOINT_TRIGGER_UPDATE = '/r/insights/platform/rhsm-conduit/v1/inventories'
 
 ConfigNamespace = None
 logger = logging.getLogger(__name__)
@@ -46,6 +48,10 @@ def get_config():
         ConfigNamespace = SimpleNamespace(**kwargs)
         ConfigNamespace.conduit_base_url = get_conduit_base_url()
         ConfigNamespace.inventory_base_url = get_inventory_base_url()
+        ConfigNamespace.endpoint_get_facts = os.getenv(
+            'ENDPOINT_GET_FACTS', ENDPOINT_GET_FACTS)
+        ConfigNamespace.endpoint_trigger_update = os.getenv(
+            'ENDPOINT_TRIGGER_UPDATE', ENDPOINT_TRIGGER_UPDATE)
     return ConfigNamespace
 
 
