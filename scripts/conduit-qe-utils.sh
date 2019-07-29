@@ -28,6 +28,12 @@ EOF
 	exit 1
 }
 
+get_conduit_pod()
+{
+	oc project ${PROJECT} > /dev/null
+	oc get pods | sed -n '/^rhsm-conduit-[0-9]/p' | grep Running  | awk '{ print $1 }'
+}
+
 read_config()
 {
 	if test -f "${CONDUITQE_CONF}"; then
@@ -37,6 +43,9 @@ read_config()
 		exit 1
 	fi
 	AUTHENTICATION=$(printf '{"identity": {"account_number": "%s"}}' ${ACCOUNT_NUMBER} | base64)
+	if test -z "${CONDUIT_POD}"; then
+            CONDUIT_POD=`get_conduit_pod`
+	fi
 }
 
 check_custom_facts()
@@ -64,7 +73,7 @@ while test $# -gt 0; do
 		;;
 	auth|identity)
 		read_config
-                echo "$AUTHENTICATION"
+		echo "$AUTHENTICATION"
 		;;
 	register)
 		read_config
@@ -105,10 +114,9 @@ EOF
 		oc project ${PROJECT}
 		oc logs -f ${CONDUIT_POD}
 		;;
-        pod|conduit-pod)
+	pod|conduit-pod)
 		read_config
-		oc project ${PROJECT}
-		oc get pods | sed -n '/^rhsm-conduit-[0-9]/p' | grep Running  | awk '{ print $1 }'
+                get_conduit_pod
 		;;
 	*)
 		echo "Unknown option or command: $1"
