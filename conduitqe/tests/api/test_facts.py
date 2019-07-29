@@ -30,7 +30,19 @@ def config():
 
 @pytest.fixture(scope="module")
 def rhsm_conduit_instance(config):
-    return config.conduit_pod
+    """Get/guess running rhsm-conduit instance."""
+    if hasattr(config, 'conduit_pod'):
+        return config.conduit_pod
+    conduit = None
+    output = oc.get_pods()
+    pods = [x.split() for x in output[1:]]
+    for pod in pods:
+        if pod[0].startswith('rhsm-conduit-quartz-postgresql'):
+            continue
+        if pod[2] == 'Running' and pod[0].startswith('rhsm-conduit-'):
+            conduit = pod[0]
+    logger.debug('rhsm-conduit instance %s', conduit)
+    return conduit
 
 
 @pytest.fixture(scope="module")
