@@ -36,5 +36,11 @@ After starting the virtual environment, the `rhsm-conduit` API tests
 can be easily run by calling as it follows:
 
 ```
-py.test -v conduitqe/tests/api/
+pytest -v conduitqe/tests/api/
+```
+
+Some tests requires Openshift, to avoid them just run:
+
+```
+pytest -v -m 'not openshift' conduitqe/tests/api/
 ```
