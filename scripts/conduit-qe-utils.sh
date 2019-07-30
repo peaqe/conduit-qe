@@ -30,7 +30,7 @@ EOF
 
 get_conduit_pod()
 {
-	oc project ${PROJECT} > /dev/null
+	oc project ${OPENSHIFT_PROJECT} > /dev/null
 	oc get pods | sed -n '/^rhsm-conduit-[0-9]/p' | grep Running  | awk '{ print $1 }'
 }
 
@@ -87,7 +87,7 @@ while test $# -gt 0; do
 		sudo subscription-manager register \
 			--username ${ETHEL_USERNAME} \
 			--password ${ETHEL_PASSWORD}
-		oc project ${PROJECT}
+		oc project ${OPENSHIFT_PROJECT}
 		oc rsh ${CONDUIT_POD} <<EOF
 curl -X POST http://localhost:8080/r/insights/platform/rhsm-conduit/v1/inventories/${ORG_ID}
 EOF
@@ -96,14 +96,14 @@ EOF
 		read_config
 		check_custom_facts
 		sudo subscription-manager facts --update
-		oc project ${PROJECT}
+		oc project ${OPENSHIFT_PROJECT}
 		oc rsh ${CONDUIT_POD} <<EOF
 curl -X POST http://localhost:8080/r/insights/platform/rhsm-conduit/v1/inventories/${ORG_ID}
 EOF
 		;;
 	hosts|inventories)
 		read_config
-		oc project ${PROJECT} > /dev/null
+		oc project ${OPENSHIFT_PROJECT} > /dev/null
 		oc rsh ${CONDUIT_POD} <<EOF
 curl -H "x-rh-identity: ${AUTHENTICATION}" \
 	http://insights-inventory.platform-ci.svc:8080/api/inventory/v1/hosts | python -m json.tool
@@ -111,7 +111,7 @@ EOF
 		;;
 	logs|watch-logs)
 		read_config
-		oc project ${PROJECT}
+		oc project ${OPENSHIFT_PROJECT}
 		oc logs -f ${CONDUIT_POD}
 		;;
 	pod|conduit-pod)

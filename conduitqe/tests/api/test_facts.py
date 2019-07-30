@@ -48,7 +48,7 @@ def rhsm_conduit_instance(config):
 @pytest.fixture(scope="module")
 def openshift_setup(config):
     oc.login(config.openshift_url, config.openshift_token)
-    result = oc.set_project(config.project)
+    result = oc.set_project(config.openshift_project)
     return result
 
 
