@@ -124,7 +124,7 @@ def test_trigger_inventory_update(config, rhsm_conduit_instance):
 
 
 @pytest.mark.openshift
-def test_check_basic_facts(config, rhsm_conduit_instance):
+def test_basic_facts(config, rhsm_conduit_instance, rh_identity):
     """Test checking basic hosts facts (sanity test).
     :id: 4b7744b8-ad7a-11e9-aed1-acde48001122
     :description: Test when checking basic host facts if
@@ -132,10 +132,8 @@ def test_check_basic_facts(config, rhsm_conduit_instance):
     :expectedresults: we get a valid JSON (possible with pagination),
         where we have basic facts for the hosts that belongs to an account.
     """
-    auth = create_authentication(config.account_number)
     url = f'{config.inventory_base_url}{config.endpoint_get_facts}'
-    header = f'x-rh-identity: {auth}'
-    cmd = f'curl -s -H "{header}" {url}'
+    cmd = f'curl -s -H "{rh_identity}" {url}'
     output = oc.exec(rhsm_conduit_instance, cmd)
     assert '!DOCTYPE' not in output[0], '\n'.join(output)
     output = ''.join(output)
