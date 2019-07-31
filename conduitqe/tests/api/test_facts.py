@@ -141,7 +141,23 @@ def test_basic_facts(config, rhsm_conduit_instance, rh_identity):
     assert data.get('results', ''), output
     # FIXME: pagination, 'total': 8, 'count': 8, 'page': 1, 'per_page': 50
     for result in data['results']:
+        assert result['account'] == config.account_number
         assert result.get('facts'), result
         for fact in result['facts']:
             assert fact['namespace'] == 'rhsm'
             assert fact['facts']['orgId'] == config.org_id
+
+
+@pytest.mark.openshift
+def test_canonical_facts(hosts_inventory):
+    """Test checking the canonical facts.
+    :id: 8b034b7a-b3d8-11e9-976b-acde48001122
+    :description: Test if the canonical facts are present.
+    :expectedresults: all the expected canonical facts are present.
+    """
+    expected_facts = [
+        'insights_id', 'rhel_machine_id', 'subscription_manager_id',
+        'satellite_id', 'bios_uuid', 'ip_addresses', 'fqdn', 'mac_addresses', ]
+    for result in hosts_inventory['results']:
+        for fact in expected_facts:
+            assert fact in result
