@@ -1,4 +1,4 @@
-"""Tests for triggering facts updates.
+"""Tests for Inventory Service Facts.
 
 :caseautomation: automated
 :casecomponent: api
@@ -50,6 +50,23 @@ def openshift_setup(config):
     oc.login(config.openshift_url, config.openshift_token)
     result = oc.set_project(config.openshift_project)
     return result
+
+
+@pytest.fixture(scope="module")
+def rh_identity(config):
+    auth = create_authentication(config.account_number)
+    header = f'x-rh-identity: {auth}'
+    return header
+
+
+@pytest.fixture()
+def hosts_inventory(config, rhsm_conduit_instance, rh_identity):
+    url = f'{config.inventory_base_url}{config.endpoint_get_facts}'
+    cmd = f'curl -s -H "{rh_identity}" {url}'
+    output = oc.exec(rhsm_conduit_instance, cmd)
+    output = ''.join(output)
+    data = json.loads(output)
+    return data
 
 
 @pytest.mark.openshift
