@@ -179,3 +179,18 @@ def test_rshm_namespace_facts(hosts_inventory):
             if fact['namespace'] == 'rhsm':
                 for expected_fact in expected_facts:
                     assert expected_fact in fact['facts']
+
+
+@pytest.mark.openshift
+def test_qpc_namespace_facts(hosts_inventory):
+    """Test checking the QPC namespace definition facts.
+    :id: f7575dbd-b468-11e9-a9f0-acde48001122
+    :description: Test if facts under the QPC namespace are present.
+    :expectedresults: all the expected qpc facts are present.
+    """
+    expected_facts = ['rh_products_installed', 'rh_product_certs']
+    for result in hosts_inventory['results']:
+        for fact in result['facts']:
+            if fact['namespace'] == 'qpc':
+                for expected_fact in expected_facts:
+                    assert expected_fact in fact['facts']
