@@ -157,7 +157,8 @@ def test_canonical_facts(hosts_inventory):
     """
     expected_facts = [
         'insights_id', 'rhel_machine_id', 'subscription_manager_id',
-        'satellite_id', 'bios_uuid', 'ip_addresses', 'fqdn', 'mac_addresses', ]
+        'satellite_id', 'external_id', 'bios_uuid', 'ip_addresses',
+        'fqdn', 'mac_addresses', 'display_name', 'ansible_host']
     for result in hosts_inventory['results']:
-        for fact in expected_facts:
-            assert fact in result
+        for expected_fact in expected_facts:
+            assert expected_fact in result
