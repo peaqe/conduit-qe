@@ -162,3 +162,20 @@ def test_canonical_facts(hosts_inventory):
     for result in hosts_inventory['results']:
         for expected_fact in expected_facts:
             assert expected_fact in result
+
+
+@pytest.mark.openshift
+def test_rshm_namespace_facts(hosts_inventory):
+    """Test checking the RHSM namespace definition facts.
+    :id: 8b034b7a-b3d8-11e9-976b-acde48001122
+    :description: Test if facts under the RHSM namespace are present.
+    :expectedresults: all the expected rhsm facts are present.
+    """
+    expected_facts = [
+        'MEMORY', 'RH_PROD', 'CPU_CORES', 'IS_VIRTUAL',
+        'CPU_SOCKETS', 'ARCHITECTURE']
+    for result in hosts_inventory['results']:
+        for fact in result['facts']:
+            if fact['namespace'] == 'rhsm':
+                for expected_fact in expected_facts:
+                    assert expected_fact in fact['facts']
