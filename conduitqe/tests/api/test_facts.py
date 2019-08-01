@@ -48,12 +48,14 @@ def test_basic_facts(config, rhsm_conduit_instance, rh_identity):
     data = json.loads(output)
     assert data.get('results', ''), output
     # FIXME: pagination, 'total': 8, 'count': 8, 'page': 1, 'per_page': 50
+    valid_namespaces = ['rhsm', 'qpc']
     for result in data['results']:
         assert result['account'] == config.account_number
         assert result.get('facts'), result
         for fact in result['facts']:
-            assert fact['namespace'] == 'rhsm'
-            assert fact['facts']['orgId'] == config.org_id
+            assert fact['namespace'] in valid_namespaces
+            if fact['namespace'] == 'rhsm':
+                assert fact['facts']['orgId'] == config.org_id
 
 
 @pytest.mark.openshift
