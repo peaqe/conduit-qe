@@ -46,8 +46,8 @@ def test_basic_facts(config, rhsm_conduit_instance, rh_identity):
     assert '!DOCTYPE' not in output[0], '\n'.join(output)
     output = ''.join(output)
     data = json.loads(output)
-    assert data.get('results', ''), output
-    # FIXME: pagination, 'total': 8, 'count': 8, 'page': 1, 'per_page': 50
+    # FIXME: pagination "total":61,"count":50,"page":1,"per_page":50
+    assert len(data['results']) == data['count'], output
     valid_namespaces = ['rhsm', 'qpc']
     for result in data['results']:
         assert result['account'] == config.account_number
