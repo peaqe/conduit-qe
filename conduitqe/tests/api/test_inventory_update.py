@@ -51,7 +51,7 @@ def test_trigger_inventory_update(config, rhsm_conduit_instance):
     logs = oc.logs(rhsm_conduit_instance, since='1m')
     updating = lookup_in_logs(logs, 'Updating inventory', org_key)
     assert updating, f'Updating inventory has failed for org key {org_key}'
-    time.sleep(5)
+    time.sleep(10)
     # Host inventory update completed look-up
     logs = oc.logs(rhsm_conduit_instance, since='1m')
     updated = lookup_in_logs(logs, 'Host inventory update completed', org_key)
