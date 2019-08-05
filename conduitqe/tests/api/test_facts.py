@@ -40,22 +40,34 @@ def test_basic_facts(config, rhsm_conduit_instance, rh_identity):
     :expectedresults: we get a valid JSON (possible with pagination),
         where we have basic facts for the hosts that belongs to an account.
     """
-    url = f'{config.inventory_base_url}{config.endpoint_get_facts}'
-    cmd = f'curl -s -H "{rh_identity}" {url}'
-    output = oc.exec(rhsm_conduit_instance, cmd)
-    assert '!DOCTYPE' not in output[0], '\n'.join(output)
-    output = ''.join(output)
-    data = json.loads(output)
-    # FIXME: pagination "total":61,"count":50,"page":1,"per_page":50
-    assert len(data['results']) == data['count'], output
-    valid_namespaces = ['rhsm', 'qpc']
-    for result in data['results']:
-        assert result['account'] == config.account_number
-        assert result.get('facts'), result
-        for fact in result['facts']:
-            assert fact['namespace'] in valid_namespaces
-            if fact['namespace'] == 'rhsm':
-                assert fact['facts']['orgId'] == config.org_id
+    in_pagination = True
+    count = 0
+    query = ''
+    while in_pagination:
+        url = f'{config.inventory_base_url}{config.endpoint_get_facts}{query}'
+        cmd = f'curl -s -H "{rh_identity}" {url}'
+        output = oc.exec(rhsm_conduit_instance, cmd)
+        assert '!DOCTYPE' not in output[0], '\n'.join(output)
+        output = ''.join(output)
+        data = json.loads(output)
+        assert data['total'] >= data['count'], output
+        assert len(data['results']) == data['count'], output
+        valid_namespaces = ['rhsm', 'qpc']
+        for result in data['results']:
+            assert result['account'] == config.account_number
+            assert result.get('facts'), result
+            for fact in result['facts']:
+                assert fact['namespace'] in valid_namespaces
+                if fact['namespace'] == 'rhsm':
+                    assert fact['facts']['orgId'] == config.org_id
+        count += data['count']
+        logging.info(
+            'total=%d, count=%d, page=%d', data['total'], count, data['page'])
+        if data['total'] <= count:
+            in_pagination = False
+        else:
+            page = data['page'] + 1
+            query = f'?page={page}'
 
 
 @pytest.mark.openshift
