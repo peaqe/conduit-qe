@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 def read_conf_file_with_environ(filename):
     """Read config file and mix with environment variables."""
-    conf = configparser.ConfigParser(os.environ)
+    conf = configparser.RawConfigParser(os.environ)
     with open(filename) as f:
         conf.read_string('[DEFAULT]\n' + f.read())
     return conf
@@ -36,7 +36,7 @@ def consolidate_configs():
             break
     if conf is None:
         logger.debug('Configuration relying only on environment variables')
-        conf = configparser.ConfigParser(os.environ)
+        conf = configparser.RawConfigParser(os.environ)
     return conf['DEFAULT']
 
 
