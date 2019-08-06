@@ -55,11 +55,27 @@ def rh_identity(config):
 
 @pytest.fixture()
 def hosts_inventory(config, rhsm_conduit_instance, rh_identity):
-    """Get Insights hosts inventory information in JSON."""
-    url = f'{config.inventory_base_url}{config.endpoint_get_facts}'
-    cmd = f'curl -s -H "{rh_identity}" {url}'
-    output = oc.exec(rhsm_conduit_instance, cmd)
-    output = ''.join(output)
-    logger.debug('hosts inventory %s', output)
-    data = json.loads(output)
-    return data
+    """Get all Insights hosts inventory information."""
+    in_pagination = True
+    count = 0
+    query = ''
+    results = []
+    while in_pagination:
+        url = f'{config.inventory_base_url}{config.endpoint_get_facts}{query}'
+        cmd = f'curl -s -H "{rh_identity}" {url}'
+        output = oc.exec(rhsm_conduit_instance, cmd)
+        assert '!DOCTYPE' not in output[0], '\n'.join(output)
+        output = ''.join(output)
+        logger.debug('hosts inventory %s', output)
+        data = json.loads(output)
+        count += data['count']
+        results.extend(data['results'])
+        logging.debug(
+            'hosts total=%d, count=%d, page=%d', data['total'],
+            count, data['page'])
+        if data['total'] <= count:
+            in_pagination = False
+        else:
+            page = data['page'] + 1
+            query = f'?page={page}'
+    return results

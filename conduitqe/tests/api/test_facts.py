@@ -81,7 +81,7 @@ def test_canonical_facts(hosts_inventory):
         'insights_id', 'rhel_machine_id', 'subscription_manager_id',
         'satellite_id', 'external_id', 'bios_uuid', 'ip_addresses',
         'fqdn', 'mac_addresses', 'display_name', 'ansible_host']
-    for result in hosts_inventory['results']:
+    for result in hosts_inventory:
         for expected_fact in expected_facts:
             assert expected_fact in result
 
@@ -96,7 +96,7 @@ def test_rshm_namespace_facts(hosts_inventory):
     expected_facts = [
         'MEMORY', 'RH_PROD', 'CPU_CORES', 'IS_VIRTUAL',
         'CPU_SOCKETS', 'ARCHITECTURE']
-    for result in hosts_inventory['results']:
+    for result in hosts_inventory:
         for fact in result['facts']:
             if fact['namespace'] == 'rhsm':
                 for expected_fact in expected_facts:
@@ -111,7 +111,7 @@ def test_qpc_namespace_facts(hosts_inventory):
     :expectedresults: all the expected qpc facts are present.
     """
     expected_facts = ['rh_products_installed', 'rh_product_certs']
-    for result in hosts_inventory['results']:
+    for result in hosts_inventory:
         for fact in result['facts']:
             if fact['namespace'] == 'qpc':
                 for expected_fact in expected_facts:
