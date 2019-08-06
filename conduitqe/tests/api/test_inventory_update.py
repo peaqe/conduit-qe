@@ -48,12 +48,14 @@ def test_trigger_inventory_update(config, rhsm_conduit_instance):
     output = oc.exec(rhsm_conduit_instance, cmd)
     assert output[0].startswith('HTTP/1.1 204'), '\n'.join(output)
     # Updating inventory look-up
-    logs = oc.logs(rhsm_conduit_instance, since='1m')
+    logs = oc.logs(rhsm_conduit_instance,
+                   since=config.conduitqe_logs_since_time)
     updating = lookup_in_logs(logs, 'Updating inventory', org_key)
     assert updating, f'Updating inventory has failed for org key {org_key}'
-    time.sleep(10)
+    time.sleep(int(config.conduitqe_wait_for_update_time))
     # Host inventory update completed look-up
-    logs = oc.logs(rhsm_conduit_instance, since='1m')
+    logs = oc.logs(rhsm_conduit_instance,
+                   since=config.conduitqe_logs_since_time)
     updated = lookup_in_logs(logs, 'Host inventory update completed', org_key)
     assert updated, \
         f'Host inventory update not completed for org key {org_key}'
