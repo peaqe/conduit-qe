@@ -68,7 +68,7 @@ pipeline {
         stage('Setup QE Tests on CI') {
             steps {
                 dir('conduit-qe') {
-                    sh 'sudo dnf install -y oc'
+                    sh 'sudo dnf install -y origin-clients'
                     sh 'pipenv run pytest -v -m "openshift" conduitqe/tests/api/'
                 }
             }
