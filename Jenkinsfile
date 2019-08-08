@@ -52,12 +52,21 @@ pipeline {
         }
         stage('Setup QE Tests') {
             steps {
-                echo 'test'
+                // Setup Conduit-QE Config File
+                configFileProvider([configFile(fileId: '17df57b9-d207-4d7a-bff2-9111558642e4', targetLocation: '/home/jenkins/.conduitqe.conf')])
                 dir('conduit-qe') {
                     git 'https://github.com/peaqe/conduit-qe'
                     sh 'sudo dnf install -y pipenv'
                     sh 'pipenv install'
                     sh 'pipenv run pytest -v -m "not openshift" conduitqe/tests/api/'
+                }
+            }
+        }
+        stage('Setup QE Tests on CI') {
+            steps {
+                dir('conduit-qe') {
+                    sh 'sudo dnf install -y oc'
+                    sh 'pipenv run pytest -v -m "openshift" conduitqe/tests/api/'
                 }
             }
         }
