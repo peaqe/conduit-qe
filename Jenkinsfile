@@ -70,11 +70,10 @@ pipeline {
                 // Setup Conduit-QE Config File
                 sh 'pwd'
                 configFileProvider([configFile(fileId: '17df57b9-d207-4d7a-bff2-9111558642e4', targetLocation: '/home/jenkins/workspace/rhsm-conduit-qe/rhsm-conduit-qe-testing/.conduitqe.conf')]) {
-                    echo 'Copying conduitqe.conf'
-                }
-                dir('conduit-qe') {
-                    sh 'sudo dnf install -y origin-clients'
-                    sh 'pipenv run pytest --log-cli-level=DEBUG -v -m "openshift" conduitqe/tests/api/'
+			dir('conduit-qe') {
+			    sh 'sudo dnf install -y origin-clients'
+			    sh 'pipenv run pytest --log-cli-level=DEBUG -v -m "openshift" conduitqe/tests/api/'
+			}
                 }
             }
         }
