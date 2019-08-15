@@ -69,7 +69,7 @@ pipeline {
             steps {
                 // Setup Conduit-QE Config File
                 sh 'pwd'
-                configFileProvider([configFile(fileId: '17df57b9-d207-4d7a-bff2-9111558642e4', targetLocation: 'conduitqe.conf')]) {
+                configFileProvider([configFile(fileId: '17df57b9-d207-4d7a-bff2-9111558642e4', targetLocation: '/home/jenkins/workspace/rhsm-conduit-qe/rhsm-conduit-qe-testing/.conduitqe.conf')]) {
                     echo 'Copying conduitqe.conf'
                 }
                 dir('conduit-qe') {
