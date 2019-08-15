@@ -74,7 +74,7 @@ pipeline {
                 }
                 dir('conduit-qe') {
                     sh 'sudo dnf install -y origin-clients'
-                    sh 'pipenv run pytest -v -m "openshift" conduitqe/tests/api/'
+                    sh 'pipenv run pytest --log-cli-level=DEBUG -v -m "openshift" conduitqe/tests/api/'
                 }
             }
         }
