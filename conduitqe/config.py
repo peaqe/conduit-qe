@@ -34,12 +34,14 @@ def consolidate_configs():
     conf = None
     for filename in CONFIG_PATHS:
         filename = os.path.expanduser(filename)
+        filename = os.path.abspath(filename)
+        logger.debug("Looking for configuration at '%s'", filename)
         if os.path.isfile(filename):
-            logger.debug("Reading configuration on '%s'", filename)
+            logger.info("Using configuration '%s'", filename)
             conf = read_conf_file_with_environ(filename)
             break
     if conf is None:
-        logger.debug('Configuration relying only on environment variables')
+        logger.warning('Configuration relying only on environment variables')
         conf = configparser.RawConfigParser(os.environ)
     return conf['DEFAULT']
 
