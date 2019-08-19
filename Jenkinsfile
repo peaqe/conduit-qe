@@ -54,14 +54,14 @@ pipeline {
             steps {
                 // Setup Conduit-QE Config File
                 sh 'pwd'
-                configFileProvider(
-                    [configFile(fileId: '17df57b9-d207-4d7a-bff2-9111558642e4', targetLocation: '.conduitqe.conf')]) {
-                    echo 'Copying conduitqe.conf'
-                }
                 dir('conduit-qe') {
                     git 'https://github.com/peaqe/conduit-qe'
                     sh 'sudo dnf install -y pipenv'
                     sh 'pipenv install'
+                    configFileProvider(
+                        [configFile(fileId: '17df57b9-d207-4d7a-bff2-9111558642e4', targetLocation: 'conduitqe.conf', variable: 'CONDUITQE_CONF')]) {
+                        echo 'Copying $CONDUITQE_CONF'
+                    }
                     sh 'pipenv run pytest -v -m "not openshift" conduitqe/tests/api/'
                 }
             }
