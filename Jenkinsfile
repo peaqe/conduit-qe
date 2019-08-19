@@ -59,8 +59,8 @@ pipeline {
                     sh 'sudo dnf install -y pipenv'
                     sh 'pipenv install'
                     configFileProvider(
-                        [configFile(fileId: '17df57b9-d207-4d7a-bff2-9111558642e4', targetLocation: 'conduitqe.conf', variable: 'CONDUITQE_CONF')]) {
-                        echo 'Copying $CONDUITQE_CONF'
+                        [configFile(fileId: '17df57b9-d207-4d7a-bff2-9111558642e4', targetLocation: 'conduitqe.conf', variable: 'CONDUITQE_CONFIG')]) {
+                        echo "Copying configuration $CONDUITQE_CONFIG"
                     }
                     sh 'pipenv run pytest -v -m "not openshift" conduitqe/tests/api/'
                 }
@@ -68,12 +68,10 @@ pipeline {
         }
         stage('Setup QE Tests on CI') {
             steps {
-                // Setup Conduit-QE Config File
                 sh 'pwd'
                 dir('conduit-qe') {
-                    sh 'pwd'
                     sh 'sudo dnf install -y origin-clients'
-                    sh 'pipenv run pytest --log-cli-level=DEBUG -v -m "openshift" conduitqe/tests/api/'
+                    sh 'pipenv run pytest -v -m "openshift" conduitqe/tests/api/'
                 }
             }
         }
