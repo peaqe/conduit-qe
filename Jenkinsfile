@@ -78,15 +78,15 @@ pipeline {
         stage('Setup QE Multiple Accounts Tests on CI') {
             steps {
                 sh 'pwd'
-                configFileProvider(
-                    [configFile(fileId: '5635e91a-d428-4a35-93a1-b20c5e744f94', targetLocation: 'conduitqe.conf', variable: 'CONDUITQE_CONFIG')]) {
-                    echo "Copying configuration $CONDUITQE_CONFIG"
-                }
-                configFileProvider(
-                    [configFile(fileId: 'fafec977-5232-4825-9ff5-2df4e62bdca9', targetLocation: 'accounts.txt', variable: 'ACCOUNTS_LIST')]) {
-                    echo "Copying accounts list $ACCOUNTS_LIST"
-                }
                 dir('conduit-qe') {
+                    configFileProvider(
+                        [configFile(fileId: '5635e91a-d428-4a35-93a1-b20c5e744f94', targetLocation: 'conduitqe.conf', variable: 'CONDUITQE_CONFIG')]) {
+                        echo "Copying configuration $CONDUITQE_CONFIG"
+                    }
+                    configFileProvider(
+                        [configFile(fileId: 'fafec977-5232-4825-9ff5-2df4e62bdca9', targetLocation: 'accounts.txt', variable: 'ACCOUNTS_LIST')]) {
+                        echo "Copying accounts list $ACCOUNTS_LIST"
+                    }
                     sh 'while IFS= read -r line; do pipenv run env $line pytest -v -m openshift conduitqe/tests/api/ ; done < accounts.txt'
                 }
             }
