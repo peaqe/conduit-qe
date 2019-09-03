@@ -16,6 +16,8 @@ ENDPOINT_TRIGGER_UPDATE = '/r/insights/platform/rhsm-conduit/v1/inventories'
 CONDUITQE_WAIT_FOR_UPDATE_TIME = '30'
 # Return logs newer than a relative duration like 60s or 2m
 CONDUITQE_LOGS_SINCE_TIME = '1m'
+# Number of attempts (from 1..max)
+CONDUITQE_MAX_ATTEMPTS = 3
 
 ConfigNamespace = None
 logger = logging.getLogger(__name__)
@@ -75,6 +77,8 @@ def get_config():
             'CONDUITQE_WAIT_FOR_UPDATE_TIME', CONDUITQE_WAIT_FOR_UPDATE_TIME)
         ConfigNamespace.conduitqe_logs_since_time = os.getenv(
             'CONDUITQE_LOGS_SINCE_TIME', CONDUITQE_LOGS_SINCE_TIME)
+        ConfigNamespace.conduitqe_max_attempts = os.getenv(
+            'CONDUITQE_MAX_ATTEMPTS', CONDUITQE_MAX_ATTEMPTS)
     return ConfigNamespace
 
 
