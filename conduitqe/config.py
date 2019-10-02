@@ -13,9 +13,9 @@ INVENTORY_BASE_URL = INVENTORY_QA_BASE_URL
 ENDPOINT_GET_FACTS = '/api/inventory/v1/hosts'
 ENDPOINT_TRIGGER_UPDATE = '/r/insights/platform/rhsm-conduit/v1/inventories'
 # Time (only in seconds) to wait for updates
-CONDUITQE_WAIT_FOR_UPDATE_TIME = '30'
+CONDUITQE_WAIT_FOR_UPDATE_TIME = '60'
 # Return logs newer than a relative duration like 60s or 2m
-CONDUITQE_LOGS_SINCE_TIME = '1m'
+CONDUITQE_LOGS_SINCE_TIME = '2m'
 # Number of attempts (from 1..max)
 CONDUITQE_MAX_ATTEMPTS = 3
 
