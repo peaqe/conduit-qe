@@ -71,6 +71,7 @@ pipeline {
                 sh 'pwd'
                 dir('conduit-qe') {
                     sh 'sudo dnf install -y origin-clients'
+                    sh 'sudo dnf install -y pipenv python36'
                     sh 'pipenv run pytest -v -m openshift conduitqe/tests/api/'
                 }
             }
